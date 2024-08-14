@@ -23,13 +23,15 @@ export const setupServer = () => {
 
   app.get('/contacts', async (req, res) => {
     const contacts = await getAllContacts();
-
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
       data: contacts,
     });
   });
+// app.get('/contacts', (req, res)=>{
+//   })
+
 
   app.get('/contacts/:contactId', async (req, res, next) => {
     const { contactId } = req.params;
@@ -47,6 +49,8 @@ export const setupServer = () => {
       data: contact,
     });
   });
+  //
+
 
   app.use('*', (err, req, res, next) => {
     res.status(404).json({
