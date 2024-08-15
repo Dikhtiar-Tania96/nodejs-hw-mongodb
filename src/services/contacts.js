@@ -1,12 +1,16 @@
-import { ContactsCollection } from '../db/models/contact.js';
+import { ContactCollection } from '../db/models/contact.js';
 
 export const getAllContacts = async () => {
-  const contacts = await ContactsCollection.find();
-//   console.log('contacts', contacts);
-  return contacts;
+  try {
+    const contacts = await ContactCollection.find();
+    console.log('Contacts:', contacts); // Вывод всех контактов
+    return contacts;
+  } catch (error) {
+    console.error('Error fetching contacts:', error);
+    throw error; // Или можно вернуть пустой массив []
+  }
 };
-
-export const getContactById = async (contactId) => {
-  const contact = await ContactsCollection.findById(contactId);
+export const getContactByID = async (contactId) => {
+  const contact = await ContactCollection.findById(contactId);
   return contact;
 };
