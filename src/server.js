@@ -1,10 +1,9 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { env } from './utils/env.js';
 import { getAllContacts, getContactById } from './services/contacts.js';
-
 dotenv.config();
 
 const PORT = Number(env('PORT', '3000'));
@@ -33,13 +32,12 @@ export const setupServer = () => {
     }
   });
 
-
-  app.get('/contacts/:contactId', async (req, res, next) => {
+  app.get('/contacts/:id', async (req, res, next) => {
     try {
-    const {contactId} = req.params;
-    const contact = await getContactById(contactId)
+    const {id} = req.params;
+    const contactId = await getContactById(id)
 
-    if (!contact) {
+    if (contactId === null) {
       res.status(404).json({
         status: 404,
         message: 'Contact not found',
@@ -49,7 +47,7 @@ export const setupServer = () => {
     res.json({
       status: 200,
       message: `Successfully found contact with id ${contactId}!`,
-      data: contact,
+      data: contactId,
     });
     } catch (error) {
       next(error)
@@ -77,3 +75,9 @@ export const setupServer = () => {
     console.log(`Server is running on port ${PORT} `);
   });
 };
+
+
+
+
+
+
