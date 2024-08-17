@@ -5,8 +5,8 @@ import cors from 'cors';
 import { env } from './utils/env.js';
 import { getAllContacts, getContactById } from './services/contacts.js';
 
-// const PORT = Number(env('PORT', '3000'));
-const PORT = Number(env('PORT'));
+const PORT = Number(env('PORT', '3000'));
+// const PORT = Number(env('PORT'));
 
 export const setupServer = () => {
   const app = express();
@@ -35,9 +35,9 @@ export const setupServer = () => {
   app.get('/contacts/:contactId', async (req, res, next) => {
     try {
     const {contactId} = req.params;
-    const contactNumber = await getContactById(contactId);
+    const contact = await getContactById(contactId);
 
-    if (contactNumber === null) {
+    if (!contact) {
       res.status(404).json({
         status: 404,
         message: 'Contact not found',
@@ -47,7 +47,7 @@ export const setupServer = () => {
     res.status(200).json({
       status: 200,
       message: `Successfully found contact with id ${contactId}!`,
-      data: contactNumber,
+      data: contact,
     });
     } catch (error) {
       next(error);
@@ -55,7 +55,7 @@ export const setupServer = () => {
   });
  
 
-  app.use(( req, res) => {
+  app.use(( req, res, next) => {
     res.status(404).json({
       status: 404,
       message: 'Not found',
@@ -63,7 +63,7 @@ export const setupServer = () => {
     });
   });
 
-  app.use((err, req, res) => {
+  app.use((err, req, res, next) => {
     res.status(500).json({
       status: 500,
       message: 'Something went wrong',
