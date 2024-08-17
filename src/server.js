@@ -51,7 +51,7 @@ export const setupServer = () => {
     });
     } catch (error) {
       next(error)
-    }
+    };
   });
  
 
