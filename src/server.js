@@ -1,12 +1,12 @@
-import dotenv from 'dotenv';
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
+
 import { env } from './utils/env.js';
 import { getAllContacts, getContactById } from './services/contacts.js';
-dotenv.config();
 
-const PORT = Number(env('PORT', '3000'));
+// const PORT = Number(env('PORT', '3000'));
+const PORT = Number(env('PORT'));
 
 export const setupServer = () => {
   const app = express();
@@ -26,9 +26,9 @@ export const setupServer = () => {
       res.status(200).json({
         status:200, 
         data:contacts,
-        message: 'Successfully found contacts!'})
+        message: 'Successfully found contacts!'});
     } catch (error) {
-      next(error)
+      next(error);
     }
   });
 
@@ -44,13 +44,13 @@ export const setupServer = () => {
         data: null
       });
     };
-    res.json({
+    res.status(200).json({
       status: 200,
-      message: `Successfully found contact with id ${contactNumber}!`,
+      message: `Successfully found contact with id ${contactId}!`,
       data: contactNumber,
     });
     } catch (error) {
-      next(error)
+      next(error);
     };
   });
  
@@ -67,15 +67,16 @@ export const setupServer = () => {
     res.status(500).json({
       status: 500,
       message: 'Something went wrong',
-      data: { error: err.message },
+      data: { error: err.message }
     });
   });
+  
+
   
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT} `);
   });
 };
-
 
 
 
