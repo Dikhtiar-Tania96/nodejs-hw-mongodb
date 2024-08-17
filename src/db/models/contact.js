@@ -31,4 +31,4 @@ const contactSchema = new Schema(
 );
 
 export const ContactCollection = model('Contact', contactSchema);
-//Contact => to lower case => contact => mnothina => contacts
+//Contact => to lower case => contact => other => contacts
