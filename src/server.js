@@ -35,7 +35,7 @@ export const setupServer = () => {
   app.get('/contacts/:contactId', async (req, res, next) => {
     try {
     const {contactId} = req.params;
-    const contactNumber = await getContactById(contactId)
+    const contactNumber = await getContactById(contactId);
 
     if (contactNumber === null) {
       res.status(404).json({
