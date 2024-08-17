@@ -67,7 +67,7 @@ export const setupServer = () => {
     res.status(500).json({
       status: 500,
       message: 'Something went wrong',
-      data: { error: err.message },
+      data: { error: err.message }
     });
   });
   
