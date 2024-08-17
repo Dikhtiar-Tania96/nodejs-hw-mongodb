@@ -10,6 +10,8 @@ export const getAllContacts = async () => {
     throw error;
   }
 };
+
+
 export const getContactById = async (contactId) => {//повертає контакт за id
   const contact = await ContactCollection.findById(contactId);
   return contact;
