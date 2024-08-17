@@ -41,7 +41,7 @@ export const setupServer = () => {
       res.status(404).json({
         status: 404,
         message: 'Contact not found',
-        data: null
+        data: null,
       });
     };
     res.status(200).json({
