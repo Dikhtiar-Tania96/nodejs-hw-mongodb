@@ -5,7 +5,7 @@ export const getAllContacts = async () => {
     const contacts = await ContactCollection.find();//повертає масив усіх контактів
     console.log('Contacts:', contacts); 
     return contacts;
-  } catch (error) {
+  } catch (error){
     console.error('Error fetching contacts:', error);
     throw error;
   };
