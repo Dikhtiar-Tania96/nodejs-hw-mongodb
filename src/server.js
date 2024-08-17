@@ -43,7 +43,7 @@ export const setupServer = () => {
         message: 'Contact not found',
         data: null
       });
-    }
+    };
     res.json({
       status: 200,
       message: `Successfully found contact with id ${contactNumber}!`,
