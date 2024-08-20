@@ -41,12 +41,12 @@ export const setupServer = () => {
       res.status(404).json({
         status: 404,
         message: 'Contact not found',
-        data: null
+        data: null,
       });
     };
     res.status(200).json({
       status: 200,
-      message: `Successfully found contact with id ${contactId}!`,
+      message: `Successfully found contact with id ${contactId}!!!`,
       data: contact,
     });
     } catch (error) {
@@ -72,9 +72,8 @@ export const setupServer = () => {
   });
   
 
-  
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT} `);
+    console.log(`Server is running on port ${PORT}`);
   });
 };
 
