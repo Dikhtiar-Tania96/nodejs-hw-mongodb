@@ -13,8 +13,7 @@ console.error(err);
     res.status(500).json({
       status: 500,
       message: 'Something went wrong',
-      data: err.message ,
-        // конкретне повідомлення про помилку, отримане з об'єкта помилки
+      data: err.message , // конкретне повідомлення про помилку, отримане з об'єкта помилки
+    });       
 
-    });
   };

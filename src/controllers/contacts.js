@@ -11,7 +11,7 @@ export async function getContactsController(req, res) {
     data: contacts,
     message: 'Successfully found contacts!',
   });
-}
+};
 
 export async function getContactByIdController(req, res, next) {
   const { contactId } = req.params;
@@ -23,12 +23,18 @@ export async function getContactByIdController(req, res, next) {
   //   next()
   // })
   if (!contact) {
-    return next(createHttpError.NotFound('Please login to view this page.'))
-    // throw createHttpError(404, 'Contact no found!');
-  }
+    return next(createHttpError.NotFound('Please login to view this page.'));    // throw createHttpError(404, 'Contact no found!');
+
+  };
   res.json({
     status: 200,
     message: `Successfully found contact with id ${contactId}!!!`,
     data: contact,
   });
+};
+
+
+export async function createContact(req, res, next) {
+  console.log(req.body);
+  res.json('Create contact');
 }

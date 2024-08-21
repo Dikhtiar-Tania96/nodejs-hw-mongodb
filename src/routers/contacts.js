@@ -6,11 +6,14 @@ import {ctrlWrapper} from '../utils/ctrlWrapper.js';
 import {
   getContactsController,
   getContactByIdController,
+  createContact,
 } from '../controllers/contacts.js';
 
 const router = express.Router();
 
 router.get('/', ctrlWrapper(getContactsController));
+
 router.get('/:contactId', ctrlWrapper(getContactByIdController));
 
+router.post('/', ctrlWrapper(createContact));
 export default router;
