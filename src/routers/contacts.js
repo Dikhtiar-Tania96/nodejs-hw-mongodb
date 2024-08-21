@@ -1,10 +1,12 @@
-import express from 'express';
+// import { Router } from 'express';
 // import { getAllContacts, getContactById } from '../services/contacts.js';
+import express from 'express';
+import {ctrlWrapper} from '../utils/ctrlWrapper.js';
+
 import {
   getContactsController,
   getContactByIdController,
 } from '../controllers/contacts.js';
-import {ctrlWrapper} from '../utils/ctrlWrapper.js';
 
 const router = express.Router();
 
