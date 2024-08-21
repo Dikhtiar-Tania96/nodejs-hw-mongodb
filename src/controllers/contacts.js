@@ -17,6 +17,11 @@ export async function getContactByIdController(req, res, next) {
   const { contactId } = req.params;
   const contact = await getContactById(contactId);
 
+
+  // app.use(function (req, res, next) {
+  //   if (!req.user) return next(createError(401, 'Please login to view this page.'))
+  //   next()
+  // })
   if (!contact) {
     throw createHttpError(404, 'Contact no found!');
   }
