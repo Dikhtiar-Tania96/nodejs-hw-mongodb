@@ -1,5 +1,6 @@
-import express from 'express';
+// import { Router } from 'express';
 // import { getAllContacts, getContactById } from '../services/contacts.js';
+import express from 'express';
 import {
   getContactsController,
   getContactByIdController,

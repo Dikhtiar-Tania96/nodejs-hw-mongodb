@@ -8,4 +8,4 @@ function ctrlWrapper (controller) {
     };
 };
 
-export {ctrlWrapper}
+export {ctrlWrapper};

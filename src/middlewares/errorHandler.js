@@ -8,7 +8,7 @@ export async function errorHandler (err, req, res, next)  {
       data: err,
     });
   }
-  console.error(err);
+console.error(err);
 
   // конкретне повідомлення про помилку, отримане з об'єкта помилки
     res.status(500).json({
