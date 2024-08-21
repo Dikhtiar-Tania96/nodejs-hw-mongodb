@@ -10,10 +10,11 @@ export async function errorHandler (err, req, res, next)  {
   }
 console.error(err);
 
-  // конкретне повідомлення про помилку, отримане з об'єкта помилки
     res.status(500).json({
       status: 500,
       message: 'Something went wrong',
       data: err.message ,
+        // конкретне повідомлення про помилку, отримане з об'єкта помилки
+
     });
   };
