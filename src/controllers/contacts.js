@@ -23,7 +23,8 @@ export async function getContactByIdController(req, res, next) {
   //   next()
   // })
   if (!contact) {
-    throw createHttpError(404, 'Contact no found!');
+    return next(createHttpError.NotFound('Please login to view this page.'))
+    // throw createHttpError(404, 'Contact no found!');
   }
   res.json({
     status: 200,
