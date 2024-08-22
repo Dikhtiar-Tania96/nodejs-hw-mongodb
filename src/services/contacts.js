@@ -48,12 +48,9 @@ export function patchContactEmail(contactId, email){
 // };
 
 //видалення контакту
-export function deleteContact(contactId){
- return ContactCollection.findByIdAndDelete(contactId);
-}
-// export const deleteContact = async (contactId) => {
-//   const contact = await ContactCollection.findByIdAndDelete({
-//     _id: contactId,
-//   });
-//   return contact;
-// };
+export const deleteContact = async (contactId) => {
+  const contact = await ContactCollection.findByIdAndDelete({
+    _id: contactId,
+  });
+  return contact;
+};
