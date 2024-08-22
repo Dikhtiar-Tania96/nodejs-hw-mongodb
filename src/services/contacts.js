@@ -16,3 +16,15 @@ export const getContactById = async(contactId) => {//повертає конта
   const contact = await ContactCollection.findById(contactId);
   return contact;
 };
+
+export function createContact(payload){
+  return ContactCollection.create(payload);
+}
+
+export function deleteContact(contactId){
+ return ContactCollection.findByIdAndDelete(contactId);
+}
+
+export function patchContactEmail(contactId, email){
+  return ContactCollection.findByIdAndUpdate(contactId, {onEmail: email}, {new:true});
+}
