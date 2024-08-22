@@ -53,7 +53,7 @@ export async function deleteContactController(req, res, next) {
     return next(createHttpError(404,'Student not found'));
   }
   res.status(204).end();
-}
+};
  
 //оновлення контакту
 // export async function patchContactController(req, res, next) {
