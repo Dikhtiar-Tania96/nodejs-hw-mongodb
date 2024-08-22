@@ -4,7 +4,7 @@ import {
   getContactById,
   createContact,
   deleteContact,
-  patchContactEmail,
+  updateContact
 } from '../services/contacts.js';
 
 //пошук усіх контактів
@@ -60,7 +60,7 @@ export async function patchContactController(req, res, next) {
   const {contactId} = req.params;
   const {email} = req.body;
 
-  const updatedContact = await patchContactEmail(contactId, email);
+  const updatedContact = await updateContact(contactId, email);
   if(updatedContact === null){
     return next(createHttpError.NotFound('Contact not found'));
   }
