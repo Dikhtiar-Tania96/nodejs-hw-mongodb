@@ -26,34 +26,25 @@ export const createContact = async (payload) => {
 
 
 //зміна даних у контакті
-export function patchContactEmail(contactId, email){
-  return ContactCollection.findByIdAndUpdate(contactId, {onEmail: email}, {new:true});
-}
-// export const patchContactEmail = async (contactId, payload, options = {}) => {
-//   const opaResult = await ContactCollection.findOneAndUpdate(
-//     { _id: contactId },
-//     payload,
-//     {
-//       new: true,
-//       includeResultMetadata: true,
-//       ...options,
-//     },
-//   );
-//   if (!opaResult || !opaResult.value) return null;
+export const updateContact = async (contactId, payload, options = {}) => {
+  const rawResult = await ContactCollection.findOneAndUpdate(
+    { _id: contactId },
+    payload,
+    { new: true, includeResultMetadata: true, ...options },
+  );
+  if (!rawResult || !rawResult.value) return null;
 
-//   return {
-//     contact: opaResult.value,
-//     isNew: Boolean(opaResult?.lastErrorObject?.upserted),
-//   };
-// };
+  return {
+    contact: rawResult.value,
+    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
+  };
+};
+
 
 //видалення контакту
-export function deleteContact(contactId){
- return ContactCollection.findByIdAndDelete(contactId);
-}
-// export const deleteContact = async (contactId) => {
-//   const contact = await ContactCollection.findByIdAndDelete({
-//     _id: contactId,
-//   });
-//   return contact;
-// };
+export const deleteContact = async (contactId) => {
+  const contact = await ContactCollection.findByIdAndDelete({
+    _id: contactId,
+  });
+  return contact;
+};

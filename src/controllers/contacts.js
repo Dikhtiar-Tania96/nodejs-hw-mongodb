@@ -4,7 +4,7 @@ import {
   getContactById,
   createContact,
   deleteContact,
-  patchContactEmail,
+  updateContact
 } from '../services/contacts.js';
 
 //пошук усіх контактів
@@ -53,16 +53,28 @@ export async function deleteContactController(req, res, next) {
     return next(createHttpError(404,'Student not found'));
   }
   res.status(204).end();
-}
+};
  
 //оновлення контакту
-export async function patchContactController(req, res, next) {
-  const {contactId} = req.params;
-  const {email} = req.body;
-
-  const updatedContact = await patchContactEmail(contactId, email);
-  if(updatedContact === null){
-    return next(createHttpError.NotFound('Contact not found'));
+// export async function patchContactController(req, res, next) {
+//   const {contactId} = req.params;
+//   const {email} = req.body;
+//   const updatedContact = await updateContact(contactId, email);
+//   if(updatedContact === null){
+//     return next(createHttpError.NotFound('Contact not found'));
+//   }
+//   res.status({status:200, message:'Contact email updated', data: updatedContact});
+// }
+export const patchContactController = async (req, res, next) => {
+  const { contactId } = req.params;
+  const result = await updateContact(contactId, req.body);
+  if (!result) {
+    next(createHttpError(404, 'Contacts not found'));
+    return;
   }
-  res.status({status:200, message:'Contact email updated', data: updatedContact});
-}
+  res.json({
+    status: 200,
+    message: 'Successfully patched a contact!',
+    data: result.contact,
+  });
+};
