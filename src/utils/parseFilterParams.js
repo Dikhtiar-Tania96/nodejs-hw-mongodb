@@ -9,7 +9,7 @@ const ParseContactType = (contactType) => {
 const ParseIsFavorite = (isFavorite) => {
   if (typeof isFavorite === 'boolean') {
     return isFavorite;
-  }
+  };
   if(typeof isFavorite === 'string'){
     // Перетворюємо рядок 'true' або 'false' на відповідне булеве значення
     return isFavorite.toLowerCase() === 'true';
