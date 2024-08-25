@@ -6,25 +6,44 @@ import {
   deleteContact,
   updateContact
 } from '../services/contacts.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+
 
 //пошук усіх контактів
-export async function getContactsController(req, res) {
-  const contacts = await getAllContacts();
+// export async function getContactsController(req, res) {
+//   const contacts = await getAllContacts();
+//   res.json({
+//     status: 200,
+//     data: contacts,
+//     message: 'Successfully found contacts!',
+//   });
+// };
+
+
+export const getContactsController = async (req, res, next) => {
+  const { page, perPage } = parsePaginationParams(req.query);
+  const {sortOrder, sortBy} = parseSortParams(req.query);
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder
+  });
+
   res.json({
     status: 200,
+    message: 'Successfully found students!',
     data: contacts,
-    message: 'Successfully found contacts!',
   });
 };
+
+
 
 //пошук контакту по id
 export async function getContactByIdController(req, res, next) {
   const { contactId } = req.params;
   const contact = await getContactById(contactId);
-  // app.use(function (req, res, next) {
-  //   if (!req.user) return next(createError(401, 'Please login to view this page.'))
-  //   next()
-  // })
   if (!contact) {
     return next(createHttpError.NotFound('Please login to view this page.'));    // throw createHttpError(404, 'Contact no found!');
   };
