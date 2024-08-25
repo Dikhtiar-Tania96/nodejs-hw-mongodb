@@ -9,12 +9,13 @@ import {
   deleteContactController,
   patchContactController,
 } from '../controllers/contacts.js';
+import {ctrlWrapper} from '../utils/ctrlWrapper.js';
+
 import {isValidId} from '../middlewares/isValidId.js';
 
-import {validateBody} from '../middlewares/validateBody';
+import {validateBody} from '../middlewares/validateBody.js';
 import {createContactsSchema} from '../validation/contacts.js';
 
-import {ctrlWrapper} from '../utils/ctrlWrapper.js';
 
 
 
