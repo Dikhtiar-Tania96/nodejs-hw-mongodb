@@ -14,7 +14,7 @@ import {ctrlWrapper} from '../utils/ctrlWrapper.js';
 import {isValidId} from '../middlewares/isValidId.js';
 
 import {validateBody} from '../middlewares/validateBody.js';
-import {createContactsSchema} from '../validation/contacts.js';
+import {createContactsSchema, updateContactsSchema} from '../validation/contacts.js';
 
 
 
@@ -27,7 +27,7 @@ router.get('/contacts/:contactId', isValidId, ctrlWrapper(getContactByIdControll
 
 router.post('/contacts', validateBody(createContactsSchema), ctrlWrapper(createContactController));
 
-router.patch('/contacts/:contactId', isValidId, ctrlWrapper(patchContactController));
+router.patch('/contacts/:contactId', validateBody(updateContactsSchema),isValidId, ctrlWrapper(patchContactController));
 
 router.delete('/contacts/:contactId', isValidId, ctrlWrapper(deleteContactController));
 
