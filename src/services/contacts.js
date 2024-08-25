@@ -29,35 +29,9 @@ return{
 };
 };
 
-
-// export const getAllContacts = async ({
-//   page = 1,
-//   perPage = 10,
-//   sortOrder = SORT_ORDER.ASC,
-// }) => {
-//   try {
-//     const limit = perPage;
-//     const skip = (page - 1) * perPage;
-//     const contactsQuery = ContactCollection.find();
-//   } catch (error) {
-//     console.error('Error fetching contacts:', error);
-//     throw error;
-//   }
-// };
-
 // export const getAllContacts = async ({page,perPage}) => {
 //   try {
-//     const limit = perPage;
-//     const skip = (page - 1) * perPage;
-//     const contactsQuery = ContactCollection.find();
-
-//     const contacts = ContactCollection.find().skip(skip).limit(perPage);
-//     const count = await ContactCollection.countDocuments();
-//     console.log({contacts, count});
-
-//     return [];
 //     // const contacts = await ContactCollection.find();//повертає масив усіх контактів
-
 //     // console.log('Contacts:', contacts);
 //     // return contacts;
 //   } catch (error){
@@ -65,7 +39,6 @@ return{
 //     throw error;
 //   };
 // };
-
 
 
 export const getContactById = async (contactId) => {
