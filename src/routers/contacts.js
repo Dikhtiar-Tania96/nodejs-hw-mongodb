@@ -18,7 +18,6 @@ import {createContactsSchema, updateContactsSchema} from '../validation/contacts
 
 
 
-
 const router = express.Router();
 
 router.get('/contacts', ctrlWrapper(getContactsController));
