@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+import crypto, { randomBytes } from 'node:crypto';
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { UserCollection } from '../db/models/user.js';
@@ -29,11 +29,13 @@ export async function loginUser(email, password) {
   }
 
   await SessionCollection.deleteOne({ userId: maybeUser._id });
+  const accessToken = randomBytes(30).toString('base64');
+  const refreshToken = randomBytes(30).toString('base64');
 
   return await SessionCollection.create({
     userId: maybeUser._id,
-    accessToken:crypto.randomBytes(30).toString('base64'),
-    refreshToken:crypto.randomBytes(30).toString('base64'),
+    accessToken,
+    refreshToken,
     accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_EXPIRY),
     refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
   });
