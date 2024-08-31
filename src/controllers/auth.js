@@ -38,7 +38,7 @@ export async function loginUserController(req, res) {
 
   res.send({
     status: 200,
-    message: 'Login completed',
+    message: 'Successfully logged in user!',
     data: {
       accessToken: session.accessToken,
     },
@@ -76,7 +76,7 @@ export async function refreshUserController(req, res) {
 
   res.send({
     status: 200,
-    message: 'Login completed',
+    message: 'Successfully refreshed a session!',
     data: {
       accessToken: session.accessToken,
     },
