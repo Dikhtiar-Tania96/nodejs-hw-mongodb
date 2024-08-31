@@ -29,6 +29,6 @@ const sessionSchema = new mongoose.Schema(
   },
 );
 
-const SessionCollection = mongoose.model('Session', sessionSchema);
+const SessionCollection = mongoose.model('session', sessionSchema);
 
 export { SessionCollection };
