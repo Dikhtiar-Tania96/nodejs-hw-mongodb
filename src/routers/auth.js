@@ -6,6 +6,8 @@ import { registerUserSchema, loginUserSchema } from '../validation/auth.js';
 import {
   registerUserController,
   loginUserController,
+  logoutUserController,
+  refreshUserController
 } from '../controllers/auth.js';
 
 const router = express.Router();
@@ -25,4 +27,6 @@ router.post(
   ctrlWrapper(loginUserController),
 );
 
+router.post('/logout', ctrlWrapper(logoutUserController));
+router.post('/refresh', ctrlWrapper(refreshUserController))
 export default router;
