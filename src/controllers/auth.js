@@ -45,6 +45,7 @@ export async function loginUserController(req, res) {
   });
 }
 
+//завершити користування у системі
 export async function logoutUserController(req, res) {
   const { sessionId } = req.cookies;
 
