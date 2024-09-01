@@ -13,12 +13,8 @@ export async function authenticate(req, res, next) {
     return;
   }
 
-  // const [bearer, accessToken] = authenticate.split(' ', 2);
   const bearer = authHeader.split(' ')[0];
   const token = authHeader.split(' ')[1];
-  // if (bearer !== 'Bearer' || typeof accessToken !== 'string') {
-  //   return next(createHttpError(401, 'Auth header should be of type Bearer'));
-  // };
   if (bearer !== 'Bearer' || !token) {
     next(createHttpError(401, 'Auth header should be of type Bearer'));
     return;
