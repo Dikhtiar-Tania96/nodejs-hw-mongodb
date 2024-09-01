@@ -34,21 +34,20 @@ export async function loginUser(email, password) {
 
 
   await SessionCollection.deleteOne({ userId: maybeUser._id });
-  const accessToken = randomBytes(30).toString('base64');
-  const refreshToken = randomBytes(30).toString('base64');
-
   return SessionCollection.create({
     userId: maybeUser._id,
-    accessToken,
-    refreshToken,
+    accessToken: crypto.randomBytes(30).toString('base64'),
+    refreshToken: crypto.randomBytes(30).toString('base64'),
     accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_EXPIRY),
     refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
   });
 }
 
-export const logoutUser = async (sessionId) => {
-  await SessionCollection.deleteOne({ _id: sessionId });
+//видалення контакту
+export function logoutUser (sessionId) {
+  return SessionCollection.deleteOne({ _id: sessionId });
 };
+
 
 export async function refreshUserSession(sessionId, refreshToken) {
   const session = await SessionCollection.findOne({
@@ -63,7 +62,7 @@ export async function refreshUserSession(sessionId, refreshToken) {
   }
 
   await SessionCollection.deleteOne({_id: sessionId});
-  return await SessionCollection.create({
+  return  SessionCollection.create({
     userId: session._id,
     accessToken: crypto.randomBytes(30).toString('base64'),
     refreshToken:crypto.randomBytes(30).toString('base64'),
