@@ -18,8 +18,10 @@ import {
   createContactsSchema,
   updateContactsSchema,
 } from '../validation/contacts.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const router = express.Router();
+router.use(authenticate);
 
 router.get('/contacts', ctrlWrapper(getContactsController));
 
@@ -47,5 +49,4 @@ router.delete(
   isValidId,
   ctrlWrapper(deleteContactController),
 );
-
 export default router;

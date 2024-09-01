@@ -48,21 +48,19 @@ export async function loginUserController(req, res) {
 //завершити користування у системі
 export async function logoutUserController(req, res) {
   const { sessionId } = req.cookies;
-
   if (typeof sessionId === 'string') {
     await logoutUser(sessionId);
   }
   res.clearCookie('refreshToken');
   res.clearCookie('sessionId');
-
-  console.log(req.cookies);
-
+  // console.log(req.cookies);
   res.send(204).end();
 }
 
+
+
 export async function refreshUserController(req, res) {
   const { sessionId, refreshToken } = req.cookies;
-
   const session = await refreshUserSession(sessionId, refreshToken);
 
   res.cookie('refreshToken', session.refreshToken, {
