@@ -6,6 +6,8 @@ export const registerUserSchema = Joi.object({
   password: Joi.string().required(),
 });
 
+
+//схема для валідації логіну
 export const loginUserSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),

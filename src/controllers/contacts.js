@@ -50,10 +50,15 @@ export const getContactsController = async (req, res, next) => {
 //пошук контакту по id
 export async function getContactByIdController(req, res, next) {
   const { contactId } = req.params;
+  const userId = req.user._id;
   const contact = await getContactById(contactId);
   if (!contact) {
     throw createHttpError(404, 'Contact no found');   // throw createHttpError(404, 'Contact no found!');
   };
+
+  if (contact.userId.toString() !== userId.toString()) {
+    return next(createHttpError(403, 'Access denied'));
+  }
   res.json({
     status: 200,
     message: `Successfully found contact with id ${contactId}!!!`,

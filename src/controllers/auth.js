@@ -6,20 +6,20 @@ import {
 } from '../services/auth.js';
 
 export async function registerUserController(req, res) {
-  // const user = {
-  //   name: req.body.name,
-  //   email: req.body.email,
-  //   password: req.body.password,
-  // };
+  const payload = {
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+  };
 
-  const registeredUser = await registerUser(req.body);
+  const registeredUser = await registerUser(payload);
   res.send({
     status: 201,
     message: 'Successfully registered a user!',
     data: registeredUser,
   });
 }
-
+//LOGIN
 export async function loginUserController(req, res) {
   const { email, password } = req.body;
   const session = await loginUser(email, password);
