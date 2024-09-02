@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const sessionSchema = new mongoose.Schema(
   {
     userId: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
     },
     accessToken: {
