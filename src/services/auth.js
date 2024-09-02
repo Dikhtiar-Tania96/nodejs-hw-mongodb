@@ -1,4 +1,6 @@
-import crypto, { randomBytes } from 'node:crypto';
+import crypto from 'node:crypto';
+import { randomBytes } from 'crypto';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { UserCollection } from '../db/models/user.js';
@@ -8,8 +10,10 @@ import {
   ACCESS_TOKEN_EXPIRY,
   SMTP
 } from '../constants/index.js';
-import {sendEmail} from '../utils/sendMail.js';
+import {sendEmail} from '../utils/sendEmail.js';
 import { env } from '../utils/env.js';
+
+
 
 
 
@@ -28,37 +32,50 @@ export async function registerUser(payload) {
 }
 
 //функціонал логіну - аудентифікація
-export async function loginUser(email, password) {
-  const maybeUser = await UserCollection.findOne({ email });
+export const loginUser = async (payload) => {
+  const maybeUser = await UserCollection.findOne({ email: payload.email });
   if (!maybeUser) {
     throw createHttpError(404, 'User not found');
-    //якщо користувач хоче залогінитись,але його немає у базі
   }
+// export async function loginUser(email, password) {
+//   const maybeUser = await UserCollection.findOne({ email });
+//   if (!maybeUser) {
+//     throw createHttpError(404, 'User not found');
+//     //якщо користувач хоче залогінитись,але його немає у базі
+//   }
 
-  const isMatch = await bcrypt.compare(password, maybeUser.password);
-  if (isMatch === false) {
+  const isMatch = await bcrypt.compare(payload.password, maybeUser.password);
+  if (!isMatch) {
     throw createHttpError(401, 'Unauthorized');
     //якщо паролі не співпадають
   }
 
-
-
   await SessionCollection.deleteOne({ userId: maybeUser._id });
-  return SessionCollection.create({
+  const accessToken = randomBytes(30).toString('base64');
+  const refreshToken = randomBytes(30).toString('base64');
+
+  return await SessionCollection.create({
     userId: maybeUser._id,
-    accessToken: crypto.randomBytes(30).toString('base64'),
-    refreshToken: crypto.randomBytes(30).toString('base64'),
+    accessToken,
+    refreshToken,
     accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_EXPIRY),
     refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
   });
-}
+};
+
+
+
+
+
+
+
 
 //видалення контакту
 export function logoutUser (sessionId) {
   return SessionCollection.deleteOne({ _id: sessionId });
 };
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function refreshUserSession(sessionId, refreshToken) {
   const session = await SessionCollection.findOne({
     _id: sessionId,
@@ -81,18 +98,44 @@ export async function refreshUserSession(sessionId, refreshToken) {
   });
 };
 
-export async function requestResetEmail(email) {
+
+
+
+export const requestResetToken = async (email) => {
   const user = await UserCollection.findOne({ email });
-  if(!user){//користувача такого немає
+  if (!user) {
     throw createHttpError(404, 'User not found');
   }
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    env('JWT_SECRET'),
+    {
+      expiresIn: '15m',
+    },
+  );
   await sendEmail({
     from: env(SMTP.SMTP_FROM),
     to: email,
-    subject: "Reset your password",
-    html: "<h1>Reset your password</h1>"
+    subject: 'Reset your password',
+    html: `<p>Click <a href="${resetToken}">here</a> to reset your password!</p>`,
   });
 };
+//..........
+// export async function requestResetEmail(email) {
+//   const user = await UserCollection.findOne({ email });
+//   if(!user){//користувача такого немає
+//     throw createHttpError(404, 'User not found');
+//   }
+//   // await sendEmail({
+//   //   from: env(SMTP.SMTP_FROM),
+//   //   to: email,
+//   //   subject: "Reset your password",
+//   //   html: "<h1>Reset your password</h1>"
+//   // });
+// };
 
 
  
