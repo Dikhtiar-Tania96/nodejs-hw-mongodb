@@ -5,12 +5,13 @@ import {
   refreshUserSession,
   // requestResetEmail
 } from '../services/auth.js';
-import { requestResetToken } from '../services/auth.js';
+// import { requestResetToken } from '../services/auth.js';
 
 
 // import { resetPassword } from '../services/auth.js';
 
 
+//Реєстрація користувача
 export async function registerUserController(req, res) {
   const payload = {
     name: req.body.name,
@@ -25,6 +26,8 @@ export async function registerUserController(req, res) {
     data: registeredUser,
   });
 }
+
+
 //LOGIN
 export async function loginUserController(req, res) {
   const { email, password } = req.body;
@@ -89,14 +92,17 @@ export async function refreshUserController(req, res) {
 };
 
 
-export const requestResetEmailController = async (req, res) => {
-  await requestResetToken(req.body.email);
-  res.json({
-    message: 'Reset password email was successfully sent!',
-    status: 200,
-    data: {},
-  });
-};
+
+
+//6hw
+// export const requestResetEmailController = async (req, res) => {
+//   await requestResetToken(req.body.email);
+//   res.json({
+//     message: 'Reset password email was successfully sent!',
+//     status: 200,
+//     data: {},
+//   });
+// };
 // export async function requestResetEmailController(req, res) {
 //   const {email} = req.body;
 //   await requestResetEmail(email);
