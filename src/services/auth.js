@@ -18,15 +18,15 @@ export async function registerUser(payload) {
 }
 
 //функціонал логіну - аудентифікація
-export async function loginUser(email, password) {
-  const maybeUser = await UserCollection.findOne({ email });
+export async function loginUser(payload) {
+  const maybeUser = await UserCollection.findOne({ email: payload.email });
   if (!maybeUser) {
     throw createHttpError(404, 'User not found');
     //якщо користувач хоче залогінитись,але його немає у базі
   }
 
-  const isMatch = await bcrypt.compare(password, maybeUser.password);
-  if (isMatch === false) {
+  const isMatch = await bcrypt.compare(payload.password, maybeUser.password);
+  if (!isMatch) {
     throw createHttpError(401, 'Unauthorized');
     //якщо паролі не співпадають
   }
@@ -34,10 +34,13 @@ export async function loginUser(email, password) {
 
 
   await SessionCollection.deleteOne({ userId: maybeUser._id });
+  const accessToken = randomBytes(30).toString('base64');
+  const refreshToken = randomBytes(30).toString('base64');
+
   return SessionCollection.create({
     userId: maybeUser._id,
-    accessToken: crypto.randomBytes(30).toString('base64'),
-    refreshToken: crypto.randomBytes(30).toString('base64'),
+    accessToken,
+    refreshToken,
     accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_EXPIRY),
     refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
   });
