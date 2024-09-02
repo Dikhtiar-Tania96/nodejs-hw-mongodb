@@ -15,6 +15,10 @@ import {
   requestResetEmailController,
 } from '../controllers/auth.js';
 
+
+// import { resetPasswordSchema } from '../validation/auth.js';
+// import { resetPasswordController } from '../controllers/auth.js';
+
 const router = express.Router();
 const jsonParser = express.json();
 
@@ -34,10 +38,17 @@ router.post(
 
 router.post('/logout', ctrlWrapper(logoutUserController));
 router.post('/refresh', ctrlWrapper(refreshUserController));
+
 router.post(
   '/send-reset-email',
   validateBody(requestResetEmailSchema),
   ctrlWrapper(requestResetEmailController),
 );
+
+// router.post(
+//   '/reset-password',
+//   validateBody(resetPasswordSchema),
+//   ctrlWrapper(resetPasswordController),
+// );
 
 export default router;
