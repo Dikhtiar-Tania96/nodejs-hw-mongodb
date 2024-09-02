@@ -44,8 +44,7 @@ export async function loginUser(payload) {
     accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_EXPIRY),
     refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
   });
-}
-
+};
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
