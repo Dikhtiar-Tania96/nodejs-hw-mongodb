@@ -15,6 +15,9 @@ export const setupServer = () => {
   const app = express();
   app.use(express.json());
   app.use(cors());
+  app.use(cookieParser());
+
+  
   app.use(
     pino({
       transport: {
@@ -23,7 +26,6 @@ export const setupServer = () => {
     }),
   );
 
-  app.use(cookieParser());
   app.use(router);
   app.use('/auth', authContacts);
   app.use('/', authenticate, contactsRoutes);

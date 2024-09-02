@@ -1,3 +1,4 @@
+import { REFRESH_TOKEN_EXPIRY } from '../constants/index.js';
 import {
   registerUser,
   loginUser,
@@ -37,15 +38,16 @@ export async function loginUserController(req, res) {
   //cookies
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    expires: session.refreshTokenValidUntil,
+    expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
+    // session.refreshTokenValidUntil,
   });
 
   res.cookie('sessionId', session._id, {
     httpOnly: true,
-    expires: session.refreshTokenValidUntil,
+    expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
   });
 
-  res.send({
+  res.json({
     status: 200,
     message: 'Successfully logged in user!',
     data: {
@@ -56,9 +58,8 @@ export async function loginUserController(req, res) {
 
 //завершити користування у системі
 export async function logoutUserController(req, res) {
-  const { sessionId } = req.cookies;
-  if (typeof sessionId === 'string') {
-    await logoutUser(sessionId);
+  if (req.cookies.sessionId) {
+    await logoutUser(req.cookies.sessionId);
   }
   res.clearCookie('refreshToken');
   res.clearCookie('sessionId');
