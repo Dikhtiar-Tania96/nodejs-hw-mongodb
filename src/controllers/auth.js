@@ -6,6 +6,10 @@ import {
   requestResetEmail
 } from '../services/auth.js';
 
+
+// import { resetPassword } from '../services/auth.js';
+
+
 export async function registerUserController(req, res) {
   const payload = {
     name: req.body.name,
@@ -87,5 +91,18 @@ export async function requestResetEmailController(req, res) {
   const {email} = req.body;
   await requestResetEmail(email);
 
-  res.send("Request reset email");
-};
+  res.send({
+    status: 200,
+    message: "Reset email was send seccessfully",
+    data: {}
+  });
+}; 
+
+// export const resetPasswordController = async (req, res) => {
+//   await resetPassword(req.body);
+//   res.json({
+//     message: 'Password was successfully reset!',
+//     status: 200,
+//     data: {},
+//   });
+// };
