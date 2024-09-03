@@ -59,7 +59,7 @@ export async function getContactByIdController(req, res, next) {
 //створення контакту
 export async function createContactController(req, res) {
 
-  const createdContact = await createContact(req.user._id);
+  const createdContact = await createContact(req.body);
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',
