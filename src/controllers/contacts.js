@@ -12,16 +12,6 @@ import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 
 //пошук усіх контактів
-// export async function getContactsController(req, res) {
-//   const contacts = await getAllContacts();
-//   res.json({
-//     status: 200,
-//     data: contacts,
-//     message: 'Successfully found contacts!',
-//   });
-// };
-
-
 export const getContactsController = async (req, res, next) => {
   console.log(req.user);
 
@@ -68,7 +58,8 @@ export async function getContactByIdController(req, res, next) {
 
 //створення контакту
 export async function createContactController(req, res) {
-  const createdContact = await createContact(req.body.userId);
+
+  const createdContact = await createContact(req.body);
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',
@@ -87,15 +78,6 @@ export async function deleteContactController(req, res, next) {
 };
  
 //оновлення контакту
-// export async function patchContactController(req, res, next) {
-//   const {contactId} = req.params;
-//   const {email} = req.body;
-//   const updatedContact = await updateContact(contactId, email);
-//   if(updatedContact === null){
-//     return next(createHttpError.NotFound('Contact not found'));
-//   }
-//   res.status({status:200, message:'Contact email updated', data: updatedContact});
-// }
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const result = await updateContact(contactId, req.body);
