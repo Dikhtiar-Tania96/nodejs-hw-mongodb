@@ -1,12 +1,12 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
 const sessionSchema = new mongoose.Schema(
   {
     userId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
-    accessToken: {
+    accessToken: {//токен за яким ми можемо отримувати дані
       type: String,
       required: true,
     },
@@ -29,6 +29,6 @@ const sessionSchema = new mongoose.Schema(
   },
 );
 
-const SessionCollection = mongoose.model('session', sessionSchema);
+const SessionCollection = mongoose.model('Session', sessionSchema);
 
 export { SessionCollection };

@@ -22,6 +22,7 @@ import {
 const router = express.Router();
 const jsonParser = express.json();
 
+//реєстрація користувача
 router.post(
   '/register',
   jsonParser,
@@ -37,6 +38,7 @@ router.post(
 );
 
 router.post('/logout', ctrlWrapper(logoutUserController));
+
 router.post('/refresh', ctrlWrapper(refreshUserController));
 
 
