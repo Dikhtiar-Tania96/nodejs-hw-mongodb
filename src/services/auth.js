@@ -1,5 +1,5 @@
-// import crypto from 'node:crypto';
-import { randomBytes } from 'crypto';
+import crypto from 'node:crypto';
+// import { randomBytes } from 'node:crypto';
 // import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
@@ -13,84 +13,105 @@ import {
 // import {sendEmail} from '../utils/sendEmail.js';
 // import { env } from '../utils/env.js';
 
-
-
 export async function registerUser(payload) {
   const maybeUser = await UserCollection.findOne({ email: payload.email });
-  if (maybeUser)  throw createHttpError(409, 'Email in use');//користувач вже є
-  
-  const encrypterdPassword = await bcrypt.hash(payload.password, 10); //хешування паролю
-  return await UserCollection.create({
-    ...payload,
-    password: encrypterdPassword,
-  });
+  if (maybeUser !== null) {
+    throw createHttpError(409, 'Email in use'); //користувач вже є
+  }
+
+  payload.password = await bcrypt.hash(payload.password, 10); //хешування паролю
+
+  return UserCollection.create(payload);
+
+  // const encrypterdPassword = await bcrypt.hash(payload.password, 10); //хешування паролю
+  // return await UserCollection.create({
+  //   ...payload,
+  //   password: encrypterdPassword,
+  // });
 }
 
-//функціонал логіну - аудентифікація
-export const loginUser = async(payload) => {
-  const maybeUser = await UserCollection.findOne({ email: payload.email });
-  if (!maybeUser) {
+// //функціонал логіну - аудентифікація
+export async function loginUser(email, password) {
+  const maybeUser = await UserCollection.findOne({ email });
+  if (maybeUser === null) {
     throw createHttpError(404, 'User not found');
     //якщо користувач хоче залогінитись,але його немає у базі
   }
-
-  const isMatch = await bcrypt.compare(payload.password, maybeUser.password);
-  if (!isMatch) {
+  const isMatch = await bcrypt.compare(password, maybeUser.password);
+  if (isMatch === false) {
     throw createHttpError(401, 'Unauthorized');
     //якщо паролі не співпадають
-  };
-  await SessionCollection.deleteOne({ userId: maybeUser._id });
-  const accessToken = randomBytes(30).toString('base64');
-  const refreshToken = randomBytes(30).toString('base64');
+  }
 
- return await SessionCollection.create({
+  await SessionCollection.deleteOne({ userId: maybeUser._id });
+
+  //створити нову сесію
+  return SessionCollection.create({
     userId: maybeUser._id,
-    accessToken,
-    refreshToken,
+    accessToken: crypto.randomBytes(30).toString('base64'),
+    refreshToken: crypto.randomBytes(30).toString('base64'),
     accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_EXPIRY),
     refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
   });
-};
+}
 
+// //Видалення
+export function logoutUser(sessionId) {
+  return SessionCollection.deleteOne({ _id: sessionId });
+}
 
-const createSession = () => {
-  const accessToken = randomBytes(30).toString('base64');
-  const refreshToken = randomBytes(30).toString('base64');
-  return {
-    accessToken,
-    refreshToken,
-    accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_EXPIRY),
-    refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
-  };
-};
-
-export const refreshUserSession = async ({ sessionId, refreshToken }) => {
-  console.log('Перевірка сесії:', { sessionId, refreshToken });
+export async function refreshUserSession(sessionId, refreshToken) {
   const session = await SessionCollection.findOne({
     _id: sessionId,
     refreshToken,
   });
-  if (!session) {
+
+  if (session === null) {
     throw createHttpError(401, 'Session not found');
-  }
-  const isSessionTokenExpired =
-    new Date() > new Date(session.refreshTokenValidUntil);
-  if (isSessionTokenExpired) {
-    throw createHttpError(401, 'Session token expired');
-  }
-  const newSession = createSession();
-  await SessionCollection.deleteOne({ _id: sessionId, refreshToken });
-  return await SessionCollection.create({
+  };
+
+ if (new Date() > new Date(session.refreshTokenValidUntil)){
+      throw createHttpError(401, 'Session token expired');
+ }
+   await SessionCollection.deleteOne({ _id: sessionId });
+
+
+
+
+  //створити нову сесію після видалення попередньої
+  return SessionCollection.create({
     userId: session.userId,
-    ...newSession,
+    accessToken: crypto.randomBytes(30).toString('base64'),
+    refreshToken: crypto.randomBytes(30).toString('base64'),
+    accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_EXPIRY),
+    refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
   });
-};
+  }
 
-//Видалення 
-export const logoutUser = async (sessionId) => {
-  await SessionCollection.deleteOne({ _id: sessionId });
-};
 
+// const createSession = () => {
+//   const accessToken = randomBytes(30).toString('base64');
+//   const refreshToken = randomBytes(30).toString('base64');
+//   return {
+//     accessToken,
+//     refreshToken,
+//     accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_EXPIRY),
+//     refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
+//   };
+// };
+
+// export const refreshUserSession = async ({ sessionId, refreshToken }) => {
+//   console.log('Перевірка сесії:', { sessionId, refreshToken });
+//
+//
+//
+//   const newSession = createSession();
+//   await SessionCollection.deleteOne({ _id: sessionId, refreshToken });
+//   return await SessionCollection.create({
+//     userId: session.userId,
+//     ...newSession,
+//   });
+// };
 
 // export async function refreshUserSession(sessionId, refreshToken) {
 //   const session = await SessionCollection.findOne({
@@ -114,7 +135,6 @@ export const logoutUser = async (sessionId) => {
 //   });
 // };
 
- 
 // export const requestResetToken = async (email) => {
 //   const user = await UsersCollection.findOne({ email });
 //   if (!user) {
@@ -180,11 +200,6 @@ export const logoutUser = async (sessionId) => {
 //     { password: encryptedPassword },
 //   );
 // };
-
-
-
-
-
 
 // export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
 //   // console.log('Проверка сессии:', { sessionId, refreshToken });

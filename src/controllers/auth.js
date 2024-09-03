@@ -1,4 +1,3 @@
-import { REFRESH_TOKEN_EXPIRY } from '../constants/index.js';
 import {
   registerUser,
   loginUser,
@@ -8,9 +7,7 @@ import {
 } from '../services/auth.js';
 // import { requestResetToken } from '../services/auth.js';
 
-
 // import { resetPassword } from '../services/auth.js';
-
 
 //Реєстрація користувача
 export async function registerUserController(req, res) {
@@ -28,51 +25,14 @@ export async function registerUserController(req, res) {
   });
 }
 
-
-//LOGIN
+// LOGIN
 export async function loginUserController(req, res) {
   const { email, password } = req.body;
+  await loginUser(email, password);
   const session = await loginUser(email, password);
-  // console.log(session);
+  console.log(session);
 
   //cookies
-  res.cookie('refreshToken', session.refreshToken, {
-    httpOnly: true,
-    expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
-    // session.refreshTokenValidUntil,
-  });
-
-  res.cookie('sessionId', session._id, {
-    httpOnly: true,
-    expires: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
-  });
-
-  res.json({
-    status: 200,
-    message: 'Successfully logged in user!',
-    data: {
-      accessToken: session.accessToken,
-    },
-  });
-}
-
-//завершити користування у системі
-export async function logoutUserController(req, res) {
-  if (req.cookies.sessionId) {
-    await logoutUser(req.cookies.sessionId);
-  }
-  res.clearCookie('refreshToken');
-  res.clearCookie('sessionId');
-  // console.log(req.cookies);
-  res.send(204).end();
-}
-
-
-
-export async function refreshUserController(req, res) {
-  const { sessionId, refreshToken } = req.cookies;
-  const session = await refreshUserSession(sessionId, refreshToken);
-
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
     expires: session.refreshTokenValidUntil,
@@ -85,11 +45,50 @@ export async function refreshUserController(req, res) {
 
   res.send({
     status: 200,
-    message: 'Successfully refreshed a session!',
+    message: 'Successfully logged in user!',
     data: {
       accessToken: session.accessToken,
     },
   });
+}
+//
+
+//завершити користування у системі
+export async function logoutUserController(req, res) {
+  const {sessionId} = req.cookies;
+  if (typeof sessionId === 'string') {
+    await logoutUser(sessionId);
+  }
+  res.clearCookie('refreshToken');
+  res.clearCookie('sessionId');
+
+  res.send(204).end();
+}
+
+
+export async function refreshUserController(req, res) {
+  const { sessionId, refreshToken } = req.cookies;
+
+  const session = await refreshUserSession(sessionId, refreshToken);
+
+  res.cookie('refreshToken', session.refreshToken, {
+      httpOnly: true,
+      expires: session.refreshTokenValidUntil,
+    });
+  
+    res.cookie('sessionId', session._id, {
+      httpOnly: true,
+      expires: session.refreshTokenValidUntil,
+    });
+  
+    res.send({
+      status: 200,
+      message: 'Successfully refreshed a session!',
+      data: {
+        accessToken: session.accessToken,
+      },
+    });
+  res.send('Refresh!!!');
 };
 
 
@@ -113,7 +112,7 @@ export async function refreshUserController(req, res) {
 //     message: "Reset email was send seccessfully",
 //     data: {}
 //   });
-// }; 
+// };
 
 // export const resetPasswordController = async (req, res) => {
 //   await resetPassword(req.body);
