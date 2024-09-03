@@ -8,10 +8,12 @@ import { SessionCollection } from '../db/models/session.js';
 import {
   REFRESH_TOKEN_EXPIRY,
   ACCESS_TOKEN_EXPIRY,
+  SMTP,
   // SMTP
 } from '../constants/index.js';
-// import {sendEmail} from '../utils/sendEmail.js';
-// import { env } from '../utils/env.js';
+
+import { sendMail } from '../utils/sendMail.js';
+import { env } from '../utils/env.js';
 
 export async function registerUser(payload) {
   const maybeUser = await UserCollection.findOne({ email: payload.email });
@@ -68,15 +70,12 @@ export async function refreshUserSession(sessionId, refreshToken) {
 
   if (session === null) {
     throw createHttpError(401, 'Session not found');
-  };
+  }
 
- if (new Date() > new Date(session.refreshTokenValidUntil)){
-      throw createHttpError(401, 'Session token expired');
- }
-   await SessionCollection.deleteOne({ _id: sessionId });
-
-
-
+  if (new Date() > new Date(session.refreshTokenValidUntil)) {
+    throw createHttpError(401, 'Session token expired');
+  }
+  await SessionCollection.deleteOne({ _id: sessionId });
 
   //створити нову сесію після видалення попередньої
   return SessionCollection.create({
@@ -86,13 +85,19 @@ export async function refreshUserSession(sessionId, refreshToken) {
     accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_EXPIRY),
     refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
   });
+}
+
+export async function requestResetEmail(email) {
+  const user = await UserCollection.findOne({ email });
+  if (user === null) {
+    throw createHttpError(404, 'User not found');
   }
 
-
-  export async function requestResetEmail(email) {
-    const user = await UserCollection.findOne({email});
-    if(user === null){
-      throw createHttpError(404, "User not found");
-    }
-  }
-
+ await sendMail({
+    from: env(SMTP.SMTP_FROM),
+    to: email,
+    subject: 'Reset your password',
+    html: `hello`
+    // html: `<p>Click <a href="${resetToken}">here</a> to reset your password!</p>`,
+  });
+}
