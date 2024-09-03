@@ -88,3 +88,11 @@ export async function refreshUserSession(sessionId, refreshToken) {
   });
   }
 
+
+  export async function requestResetEmail(email) {
+    const user = await UserCollection.findOne({email});
+    if(user === null){
+      throw createHttpError(404, "User not found");
+    }
+  }
+
