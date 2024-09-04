@@ -43,7 +43,7 @@ export async function getContactByIdController(req, res, next) {
   const userId = req.user._id;
   const contact = await getContactById(contactId, userId);
   if (!contact) {
-    throw createHttpError(404, 'Contact no found');   // throw createHttpError(404, 'Contact no found!');
+    throw createHttpError(404, 'Contact no found');  
   };
 
   if (contact.userId.toString() !== userId.toString()) {
@@ -61,6 +61,7 @@ export async function createContactController(req, res) {
   const userId = req.user._id;
   const payload = {...req.body, userId};
   const createdContact = await createContact(payload, userId);
+  
   console.log(createContact);
   res.status(201).json({
     status: 201,
