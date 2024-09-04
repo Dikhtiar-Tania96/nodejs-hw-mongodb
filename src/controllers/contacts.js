@@ -61,8 +61,8 @@ export async function createContactController(req, res) {
   const userId = req.user._id;
   const payload = {...req.body, userId};
   const createdContact = await createContact(payload, userId);
-  
   console.log(createContact);
+  
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',
