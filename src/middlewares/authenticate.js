@@ -3,8 +3,7 @@ import { SessionCollection } from '../db/models/session.js';
 import { UserCollection } from '../db/models/user.js';
 
 export async function authenticate(req, res, next) {
-  const authent = req.headers.authorization;
-  if (typeof authent !== 'string') {
+
     return next(createHttpError(401, 'Please provide Authorization header'));
   }
 
