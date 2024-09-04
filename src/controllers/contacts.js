@@ -58,7 +58,6 @@ export async function getContactByIdController(req, res, next) {
 
 //створення контакту
 export async function createContactController(req, res) {
-
   const userId = req.user._id;
   const payload = {...req.body, userId};
   const createdContact = await createContact(payload, userId);
