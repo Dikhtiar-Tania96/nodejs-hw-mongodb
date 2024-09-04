@@ -14,7 +14,7 @@ export const loginUserSchema = Joi.object({
 });
 
 
-//6hw
+//6hw схема валідації
 export const requestResetEmailSchema = Joi. object({
   email: Joi.string().email().required(),
 });

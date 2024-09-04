@@ -5,14 +5,14 @@ import { validateBody } from '../middlewares/validateBody.js';
 import {
   registerUserSchema,
   loginUserSchema,
-  // requestResetEmailSchema,
+  requestResetEmailSchema,
 } from '../validation/auth.js';
 import {
   registerUserController,
   loginUserController,
   logoutUserController,
   refreshUserController,
-  // requestResetEmailController
+  requestResetEmailController
 } from '../controllers/auth.js';
 
 const router = express.Router();
@@ -40,11 +40,11 @@ router.post('/refresh', ctrlWrapper(refreshUserController));
 
 
 //6hw
-// router.post(
-//   '/send-reset-email',
-//   jsonParser,
-//   validateBody(requestResetEmailSchema),
-//   ctrlWrapper(requestResetEmailController),
-// );
+router.post(
+  '/send-reset-email',
+  jsonParser,
+  validateBody(requestResetEmailSchema),
+  ctrlWrapper(requestResetEmailController),
+);
 
 export default router;

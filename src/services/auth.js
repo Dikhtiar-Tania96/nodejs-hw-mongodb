@@ -3,9 +3,12 @@
 // import fs from 'node:fs/promises';
 // import {TEMPLATES_DIR} from '../constants/index.js';
 
+import { sendEmail } from '../utils/sendMail.js';
+import { env } from '../utils/env.js';
+import jwt from 'jsonwebtoken';
+
 import crypto from 'node:crypto';
 // import { randomBytes } from 'node:crypto';
-// import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { UserCollection } from '../db/models/user.js';
@@ -13,12 +16,9 @@ import { SessionCollection } from '../db/models/session.js';
 import {
   REFRESH_TOKEN_EXPIRY,
   ACCESS_TOKEN_EXPIRY,
-  // SMTP,
+  SMTP,
 } from '../constants/index.js';
 
-// import { sendEmail } from '../utils/sendEmail.js';
-// import { env } from '../utils/env.js';
-// import jwt from 'jsonwebtoken';
 
 export async function registerUser(payload) {
   const maybeUser = await UserCollection.findOne({ email: payload.email });
@@ -27,7 +27,6 @@ export async function registerUser(payload) {
   }
 
   payload.password = await bcrypt.hash(payload.password, 10); //хешування паролю
-
   return UserCollection.create(payload);
 }
 
@@ -44,7 +43,7 @@ export async function loginUser(email, password) {
     //якщо паролі не співпадають
   }
 
-  await SessionCollection.deleteOne({ userId: maybeUser._id });
+  await SessionCollection.deleteOne({ userId: maybeUser._id });//видалення сесії
 
   //створити нову сесію
   return SessionCollection.create({
@@ -88,44 +87,26 @@ export async function refreshUserSession(sessionId, refreshToken) {
 
 
 //6hw
-// export const requestResetToken = async(email) => {
-//   const user = await UserCollection.findOne({ email });
-//   if (!user) {
-//     throw createHttpError(404, 'User not found');
-//   }
-//   const resetToken = jwt.sign(
-//     {
-//       sub: user._id,
-//       email,
-//     },
-//     env('JWT_SECRET'),
-//     {
-//       expiresIn: '5m',
-//     },
-//   );
-// };
+export const requestResetToken = async (email) => {
+  const user = await UserCollection.findOne({ email });
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    env('JWT_SECRET'),
+    {
+      expiresIn: '15m',
+    },
+  );
 
-
-  //6hw
-//   const resetPasswordTemplatePath = path.join(
-//     TEMPLATES_DIR,
-//     'reset-password.html',
-//   );
-
-//   const templateSource = (
-//     await fs.readFile(resetPasswordTemplatePath)
-//   ).toString();
-
-//   const template = handlebars.compile(templateSource);
-//   const html = template({
-//     name: user.name,
-//     link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
-//   });
-
-//  await sendEmail({
-//     from: env(SMTP.SMTP_FROM),
-//     to: email,
-//     subject: 'Reset your password',
-//     html,
-//   });
-// };
+  await sendEmail({
+    from: env(SMTP.SMTP_FROM),
+    to: email,
+    subject: 'Reset your password',
+    html: `<p>Click <a href="${resetToken}">here</a> to reset your password!</p>`,
+  });
+};
