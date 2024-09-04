@@ -6,9 +6,9 @@ import router from './routers/index.js';
 import { env } from './utils/env.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
-import contactsRoutes from './routers/contacts.js';
-import authContacts from './routers/auth.js';
-import {authenticate} from './middlewares/authenticate.js';
+// import contactsRoutes from './routers/contacts.js';
+// import authContacts from './routers/auth.js';
+// import {authenticate} from './middlewares/authenticate.js';
 
 const PORT = Number(env('PORT', '3000'));
 export const setupServer = () => {
