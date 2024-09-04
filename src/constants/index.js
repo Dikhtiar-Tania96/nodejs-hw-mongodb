@@ -5,7 +5,7 @@ export const SORT_ORDER = {
     DESC: 'desc',
   };
 
-  export const ACCESS_TOKEN_EXPIRY = 15 * 60 * 1000 * 32432432;//15hvs
+  export const ACCESS_TOKEN_EXPIRY = 15 * 60 * 1000 * 456789;//15hvs
   export const REFRESH_TOKEN_EXPIRY = 30 * 24 * 60 * 60 * 1000;
 
   export const SMTP = {
@@ -15,7 +15,6 @@ export const SORT_ORDER = {
     SMTP_PASSWORD: 'SMTP_PASSWORD',
     SMTP_FROM: 'SMTP_FROM',
   };
-
-
+  
   export const TEMPLATES_DIR = path.join(process.cwd(), 'src', 'templates');
   

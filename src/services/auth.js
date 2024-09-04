@@ -29,12 +29,6 @@ export async function registerUser(payload) {
   payload.password = await bcrypt.hash(payload.password, 10); //хешування паролю
 
   return UserCollection.create(payload);
-
-  // const encrypterdPassword = await bcrypt.hash(payload.password, 10); //хешування паролю
-  // return await UserCollection.create({
-  //   ...payload,
-  //   password: encrypterdPassword,
-  // });
 }
 
 // //функціонал логіну - аудентифікація
