@@ -11,7 +11,7 @@ if(typeof authent !== "string"){
   const [bearer, accessToken] = authent.split(' ', 2);
   if (bearer !== 'Bearer' || typeof accessToken !== 'string') {
     return next(createHttpError(401, 'Auth header should be of type Bearer'));
-  }
+  };
 
   //перевірка чи існує сесія
   const session = await SessionCollection.findOne({ accessToken });
@@ -30,4 +30,4 @@ if(typeof authent !== "string"){
   req.user = user;
 
   next();
-}
+};
