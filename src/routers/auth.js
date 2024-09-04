@@ -26,6 +26,7 @@ router.post(
   ctrlWrapper(registerUserController),
 );
 
+//вхід користувача
 router.post(
   '/login',
   jsonParser,

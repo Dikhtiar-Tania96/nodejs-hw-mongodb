@@ -42,17 +42,19 @@ export const getAllContacts = async ({
   };
 };
 
+//створення нового контакту
+export const createContact = async (payload) => {
+  const contact = await ContactCollection.create(payload);
+  return contact;
+};
+
 export const getContactById = async (contactId, userId) => {
   //повертає контакт за id
   const contact = await ContactCollection.findById({_id: contactId, userId});
   return contact;
 };
 
-//створення нового контакту
-export const createContact = async (payload) => {
-  const contact = await ContactCollection.create(payload);
-  return contact;
-};
+
 
 //зміна даних у контакті
 export const updateContact = async (contactId, payload, options = {}) => {
