@@ -9,6 +9,8 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 // import contactsRoutes from './routers/contacts.js';
 // import authContacts from './routers/auth.js';
 // import {authenticate} from './middlewares/authenticate.js';
+import { UPLOAD_DIR } from './constants/index.js';
+
 
 const PORT = Number(env('PORT', '3000'));
 export const setupServer = () => {
@@ -33,4 +35,6 @@ export const setupServer = () => {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
 };
