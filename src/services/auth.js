@@ -1,12 +1,10 @@
 import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
-import {TEMPLATES_DIR} from '../constants/index.js';
-
+import { TEMPLATES_DIR } from '../constants/index.js';
 import { sendEmail } from '../utils/sendMail.js';
 import { env } from '../utils/env.js';
-// import jwt from 'jsonwebtoken';
-
+import jwt from 'jsonwebtoken';
 import crypto from 'node:crypto';
 // import { randomBytes } from 'node:crypto';
 import bcrypt from 'bcrypt';
@@ -20,12 +18,12 @@ import {
 } from '../constants/index.js';
 
 
+
 export async function registerUser(payload) {
   const maybeUser = await UserCollection.findOne({ email: payload.email });
   if (maybeUser !== null) {
     throw createHttpError(409, 'Email in use'); //користувач вже є
   }
-
   payload.password = await bcrypt.hash(payload.password, 10); //хешування паролю
   return UserCollection.create(payload);
 }
@@ -43,7 +41,7 @@ export async function loginUser(email, password) {
     //якщо паролі не співпадають
   }
 
-  await SessionCollection.deleteOne({ userId: maybeUser._id });//видалення сесії
+  await SessionCollection.deleteOne({ userId: maybeUser._id }); //видалення сесії
 
   //створити нову сесію
   return SessionCollection.create({
@@ -83,8 +81,7 @@ export async function refreshUserSession(sessionId, refreshToken) {
     accessTokenValidUntil: new Date(Date.now() + ACCESS_TOKEN_EXPIRY),
     refreshTokenValidUntil: new Date(Date.now() + REFRESH_TOKEN_EXPIRY),
   });
-};
-
+}
 
 //6hw
 export const requestResetToken = async (email) => {
@@ -92,20 +89,20 @@ export const requestResetToken = async (email) => {
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
-  // const resetToken = jwt.sign(
-  //   {
-  //     sub: user._id,
-  //     email,
-  //   },
-  //   env('JWT_SECRET'),
-  //   {
-  //     expiresIn: '15m',
-  //   },
-  // );
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    env('JWT_SECRET'),
+    {
+      expiresIn: '15m',
+    },
+  );
 
   const resetPasswordTemplatePath = path.join(
     TEMPLATES_DIR,
-    'reset-password-email.html',
+    'reset-password.html',
   );
 
   const templateSource = (
@@ -115,18 +112,15 @@ export const requestResetToken = async (email) => {
   const template = handlebars.compile(templateSource);
   const html = template({
     name: user.name,
-    link: "link"
-    // `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
+    link: `${env('APP_DOMAIN')}/reset-password?token=${resetToken}`,
   });
-
 
   await sendEmail({
     from: env(SMTP.SMTP_FROM),
     to: email,
     subject: 'Reset your password',
-    html: html
-    // `<p>Click here to reset your password!</p>`,
-    // <a href="${resetToken}"></a>
-    // "<h1>Hello my friend!</h1>"
+    html,
+    // `<p>Click  <a href="${resetToken}">here</a> to reset your password!</p>`,
+    //  `<h1>Hello my friend!</h1>`
   });
 };
