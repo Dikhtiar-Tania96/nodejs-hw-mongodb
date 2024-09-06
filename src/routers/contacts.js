@@ -16,7 +16,7 @@ import {
   updateContactsSchema,
 } from '../validation/contacts.js';
 import { authenticate } from '../middlewares/authenticate.js';
-import { upload } from '../middlewares/upload.js';
+import { upload } from '../middlewares/multer.js';
 
 const router = express.Router();
 router.use(authenticate);
