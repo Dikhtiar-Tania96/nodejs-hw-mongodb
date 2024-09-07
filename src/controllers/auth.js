@@ -8,7 +8,7 @@ import {
 } from '../services/auth.js';
 
 //hw7
-import { generateAuthUrl } from '../utils/googleOAuth2.js';
+// import { generateAuthUrl } from '../utils/googleOAuth2.js';
 // import { loginOrSignupWithGoogle } from '../services/auth.js';
 import '../utils/googleOAuth2.js';
 
@@ -113,14 +113,13 @@ export const resetPasswordController = async (req, res) => {
 };
 
 //hw7
-// export const getGoogleOAuthUrlController = async (req, res) => {
+
+// export async function getGoogleOAuthUrlController (req, res) {
 //   const url = generateAuthUrl();
 //   res.json({
 //     status: 200,
 //     message: 'Successfully get Google OAuth url!',
-//     data: {
-//       url,
-//     },
+//     data: { url},
 //   });
 // };
 
@@ -137,12 +136,3 @@ export const resetPasswordController = async (req, res) => {
 //   });
 // };
 
-export async function getOAuthUrlController(req, res) {
-
-  const url = generateAuthUrl();
-  res.json({
-    status: 200,
-    message: 'Successfully get Google OAuth url!',
-    data: { url},
-  });
-}

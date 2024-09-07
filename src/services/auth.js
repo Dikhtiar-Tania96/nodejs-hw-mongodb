@@ -6,7 +6,7 @@ import { sendEmail } from '../utils/sendMail.js';
 import { env } from '../utils/env.js';
 import jwt from 'jsonwebtoken';
 import crypto from 'node:crypto';
-import { randomBytes } from 'node:crypto';
+// import { randomBytes } from 'node:crypto';
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { UserCollection } from '../db/models/user.js';
