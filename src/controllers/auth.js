@@ -4,9 +4,13 @@ import {
   logoutUser,
   refreshUserSession,
   requestResetToken,
-  resetPassword
+  resetPassword,
 } from '../services/auth.js';
 
+//hw7
+import { generateAuthUrl } from '../utils/googleOAuth2.js';
+// import { loginOrSignupWithGoogle } from '../services/auth.js';
+import '../utils/googleOAuth2.js';
 
 //Реєстрація користувача
 export async function registerUserController(req, res) {
@@ -54,7 +58,7 @@ export async function loginUserController(req, res) {
 
 //завершити користування у системі
 export async function logoutUserController(req, res) {
-  const {sessionId} = req.cookies;
+  const { sessionId } = req.cookies;
   if (typeof sessionId === 'string') {
     await logoutUser(sessionId);
   }
@@ -64,33 +68,30 @@ export async function logoutUserController(req, res) {
   res.send(204).end();
 }
 
-
 export async function refreshUserController(req, res) {
   const { sessionId, refreshToken } = req.cookies;
 
   const session = await refreshUserSession(sessionId, refreshToken);
 
   res.cookie('refreshToken', session.refreshToken, {
-      httpOnly: true,
-      expires: session.refreshTokenValidUntil,
-    });
-  
-    res.cookie('sessionId', session._id, {
-      httpOnly: true,
-      expires: session.refreshTokenValidUntil,
-    });
-  
-    res.send({
-      status: 200,
-      message: 'Successfully refreshed a session!',
-      data: {
-        accessToken: session.accessToken,
-      },
-    });
+    httpOnly: true,
+    expires: session.refreshTokenValidUntil,
+  });
+
+  res.cookie('sessionId', session._id, {
+    httpOnly: true,
+    expires: session.refreshTokenValidUntil,
+  });
+
+  res.send({
+    status: 200,
+    message: 'Successfully refreshed a session!',
+    data: {
+      accessToken: session.accessToken,
+    },
+  });
   res.send('Refresh!!!');
-};
-
-
+}
 
 //6hw
 export const requestResetEmailController = async (req, res) => {
@@ -110,3 +111,38 @@ export const resetPasswordController = async (req, res) => {
     data: {},
   });
 };
+
+//hw7
+// export const getGoogleOAuthUrlController = async (req, res) => {
+//   const url = generateAuthUrl();
+//   res.json({
+//     status: 200,
+//     message: 'Successfully get Google OAuth url!',
+//     data: {
+//       url,
+//     },
+//   });
+// };
+
+// export const loginWithGoogleController = async (req, res) => {
+//   const session = await loginOrSignupWithGoogle(req.body.code);
+//   // setupSession(res, session);
+
+//   res.json({
+//     status: 200,
+//     message: 'Successfully logged in via Google OAuth!',
+//     data: {
+//       accessToken: session.accessToken,
+//     },
+//   });
+// };
+
+export async function getOAuthUrlController(req, res) {
+
+  const url = generateAuthUrl();
+  res.json({
+    status: 200,
+    message: 'Successfully get Google OAuth url!',
+    data: { url},
+  });
+}

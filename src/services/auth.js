@@ -6,7 +6,7 @@ import { sendEmail } from '../utils/sendMail.js';
 import { env } from '../utils/env.js';
 import jwt from 'jsonwebtoken';
 import crypto from 'node:crypto';
-// import { randomBytes } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { UserCollection } from '../db/models/user.js';
@@ -17,7 +17,11 @@ import {
   SMTP,
 } from '../constants/index.js';
 
-
+//hw7
+// import {
+//   getFullNameFromGoogleTokenPayload,
+//   validateCode,
+// } from '../utils/googleOAuth2.js';
 
 export async function registerUser(payload) {
   const maybeUser = await UserCollection.findOne({ email: payload.email });
@@ -125,7 +129,6 @@ export const requestResetToken = async (email) => {
   });
 };
 
-
 //скидання паролю
 export const resetPassword = async (payload) => {
   let entries;
@@ -153,3 +156,30 @@ export const resetPassword = async (payload) => {
     { password: encryptedPassword },
   );
 };
+
+
+//hw7
+// export const loginOrSignupWithGoogle = async (code) => {
+//   const loginTicket = await validateCode(code);
+//   const payload = loginTicket.getPayload();
+//   if (!payload) throw createHttpError(401);
+
+//   let user = await UserCollection.findOne({ email: payload.email });
+//   if (!user) {
+//     const password = await bcrypt.hash(randomBytes(10), 10);
+//     user = await UserCollection.create({
+//       email: payload.email,
+//       name: getFullNameFromGoogleTokenPayload(payload),
+//       password,
+//       // role: 'parent',
+//     });
+//   }
+
+//   const newSession = SessionCollection.create();
+//   // const newSession = createSession();
+
+//   return await SessionCollection.create({
+//     userId: user._id,
+//     ...newSession,
+//   });
+// };

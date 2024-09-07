@@ -14,9 +14,12 @@ import {
   logoutUserController,
   refreshUserController,
   requestResetEmailController,
-  resetPasswordController 
+  resetPasswordController,
+  getOAuthUrlController
 } from '../controllers/auth.js';
 
+// import { loginWithGoogleOAuthSchema } from '../validation/auth.js';
+// import { loginWithGoogleController } from '../controllers/auth.js';
 
 const router = express.Router();
 const jsonParser = express.json();
@@ -57,4 +60,12 @@ router.post(
   ctrlWrapper(resetPasswordController),
 );
 
+router.get('/get-oauth-url', ctrlWrapper(getOAuthUrlController));
+
+
+// router.post(
+//   '/confirm-oauth',
+//   validateBody(loginWithGoogleOAuthSchema),
+//   ctrlWrapper(loginWithGoogleController),
+// );
 export default router;
