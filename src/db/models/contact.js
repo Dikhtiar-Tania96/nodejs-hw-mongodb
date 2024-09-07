@@ -1,4 +1,4 @@
-import { required } from 'joi';
+// import { required } from 'joi';
 import mongoose, { model, Schema } from 'mongoose';
 
 
@@ -16,7 +16,7 @@ const contactSchema = new Schema(
       type: String,
       required: true,
     },
-    isFavourite: {
+    isFavorite: {
       type: Boolean,
       default: false,
     },
