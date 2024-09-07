@@ -40,6 +40,7 @@
     "nodemailer": "^6.9.14",
     "pino-http": "^10.2.0",
     "pino-pretty": "^11.2.2",
-    "randombytes": "^2.1.0"
+    "randombytes": "^2.1.0",
+    "swagger-ui-express": "^5.0.1"
   }
 }
