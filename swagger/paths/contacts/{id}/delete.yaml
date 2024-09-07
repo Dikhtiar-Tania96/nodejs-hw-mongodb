@@ -1,0 +1,54 @@
+tags:
+  - Contacts
+summary: Delete a contact by id
+operationId: deleteContact
+description: 'Delete a contact using the contact ID.'
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      format: objectid
+    description: 'ID of the contact to be deleted.'
+    example: '60c72b2f9b1e4f45a1d09b4f'
+responses:
+  '204':
+    description: Contact successfully deleted
+    
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '404':
+    description: Contact not found
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: Contact with ID 60c72b2f9b1e4f45a1d09b4f not found.
+  '500':
+    description: Internal server error
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 500
+            message:
+              type: string
+              example: An unexpected error occurred.
