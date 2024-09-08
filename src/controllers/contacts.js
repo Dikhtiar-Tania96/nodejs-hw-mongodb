@@ -15,7 +15,7 @@ import { env } from '../utils/env.js';
 
 //пошук усіх контактів
 export const getContactsController = async (req, res, next) => {
-  // console.log(req.user);
+  console.log(req.user);
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
