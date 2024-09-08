@@ -20,7 +20,7 @@ export const getAllContacts = async ({
   }
 
   if (filter.isFavorite !== undefined) {
-    contactsQuery.where('isFavorite').equals(filter.isFavorite);
+    contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
 
   contactsQuery.where("userId").equals(userId);

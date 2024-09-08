@@ -6,26 +6,25 @@ const ParseContactType = (contactType) => {
   if (isContactType(contactType)) return contactType;
 };
 
-const ParseIsFavorite = (isFavorite) => {
-  if (typeof isFavorite === 'boolean') {
-    return isFavorite;
-  };
-  if(typeof isFavorite === 'string'){
-    // Перетворюємо рядок 'true' або 'false' на відповідне булеве значення
-    return isFavorite.toLowerCase() === 'true';
+const ParseIsFavorite = (isFavourite) => {
+  if (typeof isFavourite === 'boolean') {
+    return isFavourite;
   }
-    return undefined;  // Повертаємо undefined, якщо значення не підходить
-  };
-
+  if (typeof isFavorite === 'string') {
+    // Перетворюємо рядок 'true' або 'false' на відповідне булеве значення
+    return isFavourite.toLowerCase() === 'true';
+  }
+  return undefined; // Повертаємо undefined, якщо значення не підходить
+};
 
 export const parseFilterParams = (query) => {
-  const { contactType, isFavorite } = query;
+  const { contactType, isFavourite } = query;
 
   const parseContactType = ParseContactType(contactType);
-  const parseIsFavorite = ParseIsFavorite(isFavorite);
+  const parseIsFavorite = ParseIsFavorite(isFavourite);
 
   return {
     contactType: parseContactType,
-    isFavorite: parseIsFavorite,
+    isFavourite: parseIsFavorite,
   };
 };
